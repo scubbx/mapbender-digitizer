@@ -1277,13 +1277,13 @@
             var defaultAttributes = getValueOrDefault(config, "data",{});
             var allowCopy = true;
 
-            _.each(schema.copy.rules, function(ruleCode) {
+            for (var i = 0; i < schema.copy.rules.length; i++) {
                 var f = feature;
-                eval('allowCopy = ' + ruleCode + ';');
+                eval('allowCopy = ' + schema.copy.rules[i] + ';');
                 if(!allowCopy) {
-                    return false;
+                    break;
                 }
-            });
+            }
 
             if(!allowCopy) {
                 $.notify(translate('feature.clone.on.error'));
@@ -1293,7 +1293,9 @@
             var newAttributes = {};
             _.extend(newAttributes, defaultAttributes);
             _.each(feature.attributes, function(v, k) {
-                if(v === '' || v === null) {
+                // Last condition ensures, if newAttributes already has own property k, its value may not be overwritten
+                // by the value of the looped feature.
+                if (v === '' || v === null || newAttributes.hasOwnProperty(k)) {
                     return;
                 }
                 newAttributes[k] = v;
