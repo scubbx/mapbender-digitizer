@@ -3009,6 +3009,11 @@
                 $.extend(feature.data, newData);
             });
 
+            if (feature.isNew) {
+                feature.data.x = feature.data.x || feature.geometry.x || '';
+                feature.data.y = feature.data.y || feature.geometry.y || '';
+            }
+
             if(!feature.isNew && !widget.currentPopup){
                 widget._openFeatureEditDialog(feature);
             } else {
